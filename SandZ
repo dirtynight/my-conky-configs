@@ -1,0 +1,99 @@
+conky.config = {
+-- **********************************************************************
+-- BG by: Logicbox aka Logicboxxx
+
+-- E-Mail: logicbox@tuta.io
+-- Github: https://github.com/Logicboxxx
+-- **********************************************************************
+total_run_times = 0,
+update_interval = 1,
+music_player_interval = 5,
+
+background = true,
+double_buffer = true,
+no_buffers = true,
+alignment = 'top_middle',
+
+pad_percents = 2,
+
+
+default_color = 'white',
+default_outline_color = 'red',
+default_shade_color = 'white',
+draw_borders = false,
+draw_graph_borders = false,
+draw_outline = false,
+draw_shades = false,
+
+gap_x = 15,
+gap_y = 100,
+
+forced_redraw = true,
+out_to_console = false,
+out_to_stderr = false,
+extra_newline = false,
+
+own_window = true,
+own_window_class = 'conky',
+own_window_type = 'normal',
+own_window_transparent = true,
+own_window_colour = '000000',
+own_window_argb_visual = true,
+own_window_argb_value = 100,
+own_window_hints = 'undecorated,below,sticky,skip_pager,skip_taskbar',
+
+max_text_width = 0,
+minimum_width = 525, minimum_height = 0,
+maximum_width = 550,
+
+uppercase = false,
+use_spacer = 'none',
+
+use_xft = true,
+xftalpha = 1,
+
+font = 'Fira Code:size=11',
+color0 = 'd4be98',
+color1 = 'EACA65',
+color2 = 'F47730',
+color3 = 'd79921',
+color4 = 'fe8019',
+
+
+};
+conky.text = [[
+${execi 600 scripts/system.sh weather}\
+${exec scripts/system.sh getcover}\
+${color1}${font Dopestyle:size=30}${time %A}${color}
+${color0}${font Dopestyle:size=55}${voffset 10}${time %H}${font Dopestyle:size=32}${voffset -20}:${time %M}${color}${color2}${font Dopestyle:size=16}${offset -45}${voffset 35}Uhr${color}\
+${goto 222}${color2}${voffset -50}${font Dopestyle:size=19}${time %b}.${color}
+${offset 215}${color0}${voffset 10}${font Dopestyle:size=30}${time %d}${color}\ 
+${offset 190}${color1}${voffset -100}{${font Dopestyle:size=16}${execp scripts/system.sh vert}${color}${font}
+${goto 220}${image img/line0.png -p 300,30 -s 5x100}
+${goto 325}${voffset -180}${color3}${font feather::size=50}${execi 15 scripts/system.sh wicon}${color}${font} ${offset 10}${font Dopestyle:size=29}${voffset -35}${color0}${execp cat ~/.config/weather.json | jq -r '.main.temp' | awk '{print int($1+0.5)}'}${color}${font Dopestyle:size=12}${voffset -20}${color}${font Fira Code:size=15}°${color1}${font Dopestyle:size=14}C${color}
+${goto 325}${color1}${voffset 43}${font Dopestyle:size=26}${execp cat ~/.config/weather.json | jq -r '.weather[0].description'}${font}${color}
+${goto 365}${voffset 15}${color2}${font Dopestyle:size=14}Feels like ${color}${color0}${voffset -5}${execp cat ~/.config/weather.json | jq '.main.feels_like' | awk '{print int($1+0.5)}'}${voffset -10}${color}${font Fira Code:size=15}${color}°${font Dopestyle:size=11}${color1}C${color}${font}
+${offset 100}${image img/line.png -p 30,145 -s 435x6}
+${if_running spotify}\
+${if_match "Playing" == "${exec scripts/system.sh spotstatus}"}${color0}${font Guifx v2 Transports:size=30}1${font}${color}\
+${image /tmp/sandz_current.jpg -p 35,180 -s 100x100}\
+${voffset 10}${goto 150}${color3}Artist:${color} 
+${goto 150}${color0}${execp scripts/system.sh spotify_artist}
+${goto 150}${color3}Song:${goto 212}${color} 
+${goto 150}${color0}${execp scripts/system.sh spotify_title}${color}
+${goto 150}${color3}Album:${color}${goto 212} 
+${goto 150}${color0}${execp scripts/system.sh spotify_album}${color}\
+${else}\
+${if_match "Paused" == "${exec scripts/system.sh spotstatus}"}${voffset 10}${color0}${font Guifx v2 Transports:size=30}2${font}${color}\
+${image /tmp/sandz_current.jpg -p 35,180 -s 100x100}\
+${voffset 10}${goto 150}${color3}Artist:${color} 
+${goto 150}${color0}${execp scripts/system.sh spotify_artist}
+${goto 150}${color3}Song:${goto 212}${color} 
+${goto 150}${color0}${execp scripts/system.sh spotify_title}${color}
+${goto 150}${color3}Album:${color}${goto 212} 
+${goto 150}${color0}${execp scripts/system.sh spotify_album}${color}\
+${else}\
+${if_match "" == "${exec scripts/system.sh spotstatus}"}${voffset 10}${color0}${font Guifx v2 Transports:size=30}3${font}${color}\
+${alignc}${color1}${font Fira Code:size=13}Spotify Not Currently Playing!${endif}${endif}${endif}
+
+]];
